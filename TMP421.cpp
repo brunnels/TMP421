@@ -22,7 +22,7 @@ TMP421::TMP421(uint8_t addr)
 /**********************************************************
  * getIntTemp - Gets the current internal temperature from the sensor.
  *
- * @return float - The local temperature in degrees C
+ * @return float - The internal temperature in degrees C
  **********************************************************/
 float TMP421::getIntTemp(void)
 {
@@ -44,7 +44,7 @@ float TMP421::getIntTemp(void)
 /**********************************************************
  * getIntTempF - Gets the current internal temperature from the sensor.
  *
- * @return float - The local temperature in degrees F
+ * @return float - The internal temperature in degrees F
  **********************************************************/
 float TMP421::getIntTempF(void)
 {
@@ -54,7 +54,7 @@ float TMP421::getIntTempF(void)
 /**********************************************************
  * getExtTemp - Gets the current external temperature from the sensor.
  *
- * @return float - The local temperature in degrees C
+ * @return float - The external temperature in degrees C
  **********************************************************/
 float TMP421::getExtTemp(void)
 {
@@ -76,7 +76,7 @@ float TMP421::getExtTemp(void)
 /**********************************************************
  * getExtTempF - Gets the current external temperature from the sensor.
  *
- * @return float - The local temperature in degrees F
+ * @return float - The external temperature in degrees F
  **********************************************************/
 float TMP421::getExtTempF(void)
 {
