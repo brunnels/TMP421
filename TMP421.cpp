@@ -1,6 +1,8 @@
 #include "Arduino.h"
-#include <Wire.h>
+#include <I2C.h>
 #include "TMP421.h"
+
+extern I2C I2c;
 
 /******************************************************************************
  * Constructors
@@ -12,7 +14,7 @@
 TMP421::TMP421(uint8_t addr)
 {
   _address = addr;
-  Wire.begin();
+  I2c.begin();
 }
 
 /******************************************************************************
@@ -26,18 +28,25 @@ TMP421::TMP421(uint8_t addr)
  **********************************************************/
 float TMP421::getIntTemp(void)
 {
-  uint8_t highByte, lowByte;  
-  
-  Wire.beginTransmission(_address);
-  Wire.write((byte)0x00);
-  Wire.endTransmission();
-  Wire.requestFrom((int)_address, 2); // request 2 byte from address 1001000
-  while(Wire.available())
-  {
-    highByte = Wire.read(); // Read the first octet
-    lowByte = Wire.read(); // Read the second octet
+  uint8_t highByte = 0x00, lowByte = 0x00;
+
+//  Wire.beginTransmission(_address);
+//  Wire.write((byte)0x00);
+//  Wire.endTransmission();
+//  Wire.requestFrom((int)_address, 2); // request 2 byte from address 1001000
+//  while(Wire.available())
+//  {
+//    highByte = Wire.read(); // Read the first octet
+//    lowByte = Wire.read(); // Read the second octet
+//  }
+
+  I2c.write(_address, (byte) 0x00);
+  I2c.read(_address, (uint8_t) 2);
+  if(I2c.available()) {
+    highByte = I2c.receive();
+    lowByte = I2c.receive();
   }
-  
+
   return getFraction(highByte, lowByte);
 }
 
@@ -58,18 +67,25 @@ float TMP421::getIntTempF(void)
  **********************************************************/
 float TMP421::getExtTemp(void)
 {
-  uint8_t highByte, lowByte;  
-  
-  Wire.beginTransmission(_address);
-  Wire.write(0x01);
-  Wire.endTransmission();
-  Wire.requestFrom((int)_address, 2); // request 2 byte from address 1001000
-  while(Wire.available())
-  {
-    highByte = Wire.read(); // Read the first octet
-    lowByte = Wire.read(); // Read the second octet
+  uint8_t highByte = 0x00, lowByte = 0x00;
+
+//  I2c.beginTransmission(_address);
+//  I2c.write(0x01);
+//  I2c.endTransmission();
+//  I2c.requestFrom((int)_address, 2); // request 2 byte from address 1001000
+//  while(I2c.available())
+//  {
+//    highByte = I2c.read(); // Read the first octet
+//    lowByte = I2c.read(); // Read the second octet
+//  }
+
+  I2c.write(_address, (byte) 0x01);
+  I2c.read(_address, (uint8_t) 2);
+  if(I2c.available()) {
+    highByte = I2c.receive();
+    lowByte = I2c.receive();
   }
-  
+
   return getFraction(highByte, lowByte);
 }
 
@@ -92,7 +108,7 @@ float TMP421::getFraction(uint8_t highByte, uint8_t lowByte)
   float frac = 0.0;
   uint8_t bit;
   lowByte >>= 4; //shift-off the unused bits
-  
+
   /* Assemble the fraction */
   bit = lowByte & 0x01;
   frac += (bit * 0.5) * (bit * 0.5) * (bit * 0.5) * (bit * 0.5);

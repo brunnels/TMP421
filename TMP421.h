@@ -2,7 +2,7 @@
 #define TMP421_H
 
 #include "Arduino.h"
-#include <Wire.h>
+#include <TMP421.h>
 
 class TMP421
 {
@@ -12,7 +12,7 @@ class TMP421
     float getIntTempF(void);
     float getExtTemp(void);
     float getExtTempF(void);
-    
+
   private:
     uint8_t _address;
     float getFraction(uint8_t highByte, uint8_t lowByte);
